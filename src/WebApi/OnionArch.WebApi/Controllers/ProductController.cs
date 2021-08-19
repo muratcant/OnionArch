@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OnionArch.Application.Features.Queries.GetAllProducts;
 using OnionArch.Application.Interfaces.Repository;
 
 namespace OnionArch.WebApi.Controllers
@@ -8,22 +10,19 @@ namespace OnionArch.WebApi.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly IMediator mediator;
 
-        private readonly IProductRepository productRepository;
-
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IMediator mediator)
         {
-            this.productRepository = productRepository;
+            this.mediator = mediator;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get() 
+        public async Task<IActionResult> GetAll() 
         {
-            //Entity'e ulaşamamalı. DTO üzerinden ulaşmalı.
-            //Bu durumda Mapping oluşturulmalı.
-            var allList = await productRepository.GetAllAsync();
-            //CQRS yöntemi Mediatr patterni ile yapılacak.
-            return Ok(allList);
+            var list = new GetAllProductsQuery();
+            var result = await mediator.Send(list);
+            return Ok(result);
         }
 
     }
