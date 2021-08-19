@@ -1,12 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OnionArch.Application.Features.Commands.AddProduct;
 using OnionArch.Application.Features.Queries.GetAllProducts;
-using OnionArch.Application.Interfaces.Repository;
+using OnionArch.Application.Features.Queries.GetProductById;
 
 namespace OnionArch.WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -17,13 +19,26 @@ namespace OnionArch.WebApi.Controllers
             this.mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll() 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetAll()
         {
             var list = new GetAllProductsQuery();
             var result = await mediator.Send(list);
             return Ok(result);
         }
 
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetById([FromBody] Guid Id)
+        {
+            var data = new GetProductByIdQuery() { Id = Id };
+            return Ok(await mediator.Send(data));
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Add([FromBody] AddProductCommand addProductCommand)
+        {
+            return Ok(await mediator.Send(addProductCommand));
+        }
     }
 }
