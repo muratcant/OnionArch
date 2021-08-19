@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using OnionArch.Application;
 using OnionArch.Persistence;
 
 namespace OnionArch.WebApi
@@ -18,6 +20,26 @@ namespace OnionArch.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddPersistenceServices();
+            services.AddApplicationRegistration();
+
+            services.AddControllers();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "OnionArch API",
+                    Version = "v1",
+                    Description = "Onion Arch.'ýn anlaþýlmasý için geliþtirilmiþ olan bir uygulamadýr.",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Murat Can Tanriverdi",
+                        Email = string.Empty,
+                        Url = new Uri("https://github.com/muratcant"),
+                    },
+                });
+            });
+
 
         }
 
@@ -29,14 +51,21 @@ namespace OnionArch.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "OnionArch API");
+
+                c.RoutePrefix = string.Empty;
+            });
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
