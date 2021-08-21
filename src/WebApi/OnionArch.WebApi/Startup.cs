@@ -20,6 +20,7 @@ namespace OnionArch.WebApi
             services.AddPersistenceServices();
             services.AddApplicationRegistration();
 
+            
             services.AddControllers();
 
             services.AddSwaggerGen(c =>

@@ -40,5 +40,12 @@ namespace OnionArch.Persistence.Repositories
             await dbContext.SaveChangesAsync();
             return entity;
         }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var data = await dbContext.Set<T>().FindAsync(id);
+            dbContext.Remove(data);
+            return await dbContext.SaveChangesAsync() > 0 ? true : false;
+        }
     }
 }
