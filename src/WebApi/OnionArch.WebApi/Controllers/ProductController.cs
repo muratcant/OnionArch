@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OnionArch.Application.Features.Commands.AddProduct;
+using OnionArch.Application.Features.Commands.UpdateProduct;
 using OnionArch.Application.Features.Queries.GetAllProducts;
 using OnionArch.Application.Features.Queries.GetProductById;
 
@@ -39,6 +40,12 @@ namespace OnionArch.WebApi.Controllers
         public async Task<IActionResult> Add([FromBody] AddProductCommand addProductCommand)
         {
             return Ok(await mediator.Send(addProductCommand));
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Update([FromBody] UpdateProductCommand updateProductCommand)
+        {
+            return Ok(await mediator.Send(updateProductCommand));
         }
     }
 }
