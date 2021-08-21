@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OnionArch.Persistence.Repositories
 {
-    public class GenericRepository<T> : IGenericRepositoryAsync<T> where T:BaseEntity
+    public class GenericRepository<T> : IGenericRepositoryAsync<T> where T : BaseEntity
     {
         private readonly ApplicationDbContext dbContext;
         public GenericRepository(ApplicationDbContext dbContext)
@@ -32,6 +32,20 @@ namespace OnionArch.Persistence.Repositories
         public async Task<T> GetByIdAsync(Guid id)
         {
             return await dbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<T> UpdateAsync(T entity)
+        {
+            dbContext.Set<T>().Update(entity);
+            await dbContext.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            var data = await dbContext.Set<T>().FindAsync(id);
+            dbContext.Remove(data);
+            return await dbContext.SaveChangesAsync() > 0 ? true : false;
         }
     }
 }

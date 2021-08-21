@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OnionArch.Application.Features.Commands.AddProduct;
+using OnionArch.Application.Features.Commands.DeleteProduct;
+using OnionArch.Application.Features.Commands.UpdateProduct;
 using OnionArch.Application.Features.Queries.GetAllProducts;
 using OnionArch.Application.Features.Queries.GetProductById;
 
@@ -27,9 +29,8 @@ namespace OnionArch.WebApi.Controllers
             return Ok(result);
         }
 
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> GetById([FromBody] Guid Id)
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> GetById(Guid Id)
         {
             var data = new GetProductByIdQuery() { Id = Id };
             return Ok(await mediator.Send(data));
@@ -39,6 +40,19 @@ namespace OnionArch.WebApi.Controllers
         public async Task<IActionResult> Add([FromBody] AddProductCommand addProductCommand)
         {
             return Ok(await mediator.Send(addProductCommand));
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Update([FromBody] UpdateProductCommand updateProductCommand)
+        {
+            return Ok(await mediator.Send(updateProductCommand));
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(Guid Id)
+        {
+            var command = new DeleteProductCommand() { Id = Id };
+            return Ok(await mediator.Send(command));
         }
     }
 }
