@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OnionArch.Application;
 using OnionArch.Persistence;
+using OnionArch.WebApi.Middleware;
 
 namespace OnionArch.WebApi
 {
@@ -50,7 +51,7 @@ namespace OnionArch.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>

@@ -13,6 +13,7 @@ namespace OnionArch.Application
 
             serviceCollection.AddAutoMapper(assembly);
             serviceCollection.AddMediatR(assembly);
+                    
         }
     }
 }
